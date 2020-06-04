@@ -60,14 +60,10 @@ for exp in experimentos:
     print(inicio)
 
 
-inicio['media'] = (inicio['tempo1'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4']) / 4 #+ inicio['tempo3'])/3
+inicio['media'] = (inicio['tempo1'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4'] + inicio['tempo5'] + inicio['tempo6'] + inicio['tempo7']) / 7
 
 
-inicio = inicio[['nome1', 'tempo1','tempo2','tempo3','tempo4','media', 'DURACAO']]
-
-
-data_open = pd.read_csv('data/teste_open.csv', delimiter=",", header=0, low_memory=False) 
-
+inicio = inicio[['nome1', 'tempo1','tempo2','tempo3','tempo4','tempo5','tempo6','tempo7','media', 'DURACAO']]
 inicio.to_csv('teste.csv')
 
 inicio['diferenca_od'] = inicio['DURACAO'] - inicio['media']
