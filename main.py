@@ -33,79 +33,43 @@ sns.violinplot(y="DURACAO", data=data17, palette="muted")
 plt.savefig('tempo_real.png', bbox_inches='tight', pad_inches=0.0)
 plt.close()
 
-# get first experiment
 
-data = pd.read_csv('data/events_1.xml', delimiter=";", header=0, low_memory=False) 
-data['tempo'] = data['tempo'] / 60
+experimentos = [1,2,3,4,5,6,7]
+inicio = data17
 
-new = data['nome'].str.split("_", expand = True) 
-data['nome'] = new[1]
-data['nome'] = data['nome'].astype(int)
+for exp in experimentos:
 
-data = data[['nome', 'tempo']].groupby(['nome']).mean().sort_values(by=['tempo']).reset_index()
+    data = pd.read_csv('data/events_' + str(exp) + '.xml', delimiter=";", header=0, low_memory=False) 
 
-sns.violinplot(y="tempo", data=data, palette="muted")
-plt.savefig('tempo_simulado.png', bbox_inches='tight', pad_inches=0.0)
-plt.close()
+    tempo = 'tempo' + str(exp)
+    nome = 'nome' + str(exp)
 
-inicio = pd.merge(data17, data, left_index= True, right_on='nome')
+    data[tempo] = data['tempo'] / 60
 
-# get second experiment
-data = pd.read_csv('data/events_2.xml', delimiter=";", header=0, low_memory=False) 
-data['tempo2'] = data['tempo'] / 60
+    new = data['nome'].str.split("_", expand = True) 
+    data[nome] = new[1]
+    data[nome] = data[nome].astype(int)
 
-new = data['nome'].str.split("_", expand = True) 
-data['nome2'] = new[1]
-data['nome2'] = data['nome2'].astype(int)
+    data = data[[nome, tempo]].groupby([nome]).mean().sort_values(by=[tempo]).reset_index()
 
-data = data[['nome2', 'tempo2']].groupby(['nome2']).mean().sort_values(by=['tempo2']).reset_index()
+    if exp == 1:
+        inicio = pd.merge(inicio, data, left_index= True, right_on=nome)
+    else:
+        inicio = pd.merge(inicio, data, left_on= 'nome1', right_on=nome)
 
-inicio = pd.merge(inicio, data, left_on='nome', right_on='nome2')
-
-# get third experiment
-data = pd.read_csv('data/events_3.xml', delimiter=";", header=0, low_memory=False) 
-data['tempo3'] = data['tempo'] / 60
-
-new = data['nome'].str.split("_", expand = True) 
-data['nome3'] = new[1]
-data['nome3'] = data['nome3'].astype(int)
-
-data = data[['nome3', 'tempo3']].groupby(['nome3']).mean().sort_values(by=['tempo3']).reset_index()
-
-inicio = pd.merge(inicio, data, left_on='nome', right_on='nome3')
-
-# get fourth experiment
-data = pd.read_csv('data/events_4.xml', delimiter=";", header=0, low_memory=False) 
-data['tempo4'] = data['tempo'] / 60
-
-new = data['nome'].str.split("_", expand = True) 
-data['nome4'] = new[1]
-data['nome4'] = data['nome4'].astype(int)
-
-data = data[['nome4', 'tempo4']].groupby(['nome4']).mean().sort_values(by=['tempo4']).reset_index()
-
-inicio = pd.merge(inicio, data, left_on='nome', right_on='nome4')
-
-inicio['media'] = (inicio['tempo'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4']) / 4 #+ inicio['tempo3'])/3
+    print(inicio)
 
 
-inicio = inicio[['nome', 'tempo','tempo2','tempo3','tempo4','media', 'DURACAO']]
+inicio['media'] = (inicio['tempo1'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4']) / 4 #+ inicio['tempo3'])/3
+
+
+inicio = inicio[['nome1', 'tempo1','tempo2','tempo3','tempo4','media', 'DURACAO']]
 
 
 data_open = pd.read_csv('data/teste_open.csv', delimiter=",", header=0, low_memory=False) 
-data_open = data_open[['nome','tempo_open']]
-inicio = pd.merge(inicio, data_open[['nome','tempo_open']], left_on='nome', right_on='nome')
-
-inicio['tempo_open'] = inicio['tempo_open'] / 60
-inicio['diferenca_open'] = inicio['tempo_open'] - inicio['media']
 
 inicio.to_csv('teste.csv')
 
-inicio['diferenca_open'].hist()
-plt.show()
-
-
 inicio['diferenca_od'] = inicio['DURACAO'] - inicio['media']
-
 inicio['diferenca_od'].hist()
 plt.show()
