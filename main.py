@@ -34,7 +34,7 @@ plt.savefig('tempo_real.png', bbox_inches='tight', pad_inches=0.0)
 plt.close()
 
 
-experimentos = [1,2,3,4,5,6,7]
+experimentos = [1,2,3,4,5,6,7,8,9,10]
 inicio = data17
 
 for exp in experimentos:
@@ -60,10 +60,10 @@ for exp in experimentos:
     print(inicio)
 
 
-inicio['media'] = (inicio['tempo1'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4'] + inicio['tempo5'] + inicio['tempo6'] + inicio['tempo7']) / 7
+inicio['media'] = (inicio['tempo1'] + inicio['tempo2'] + inicio['tempo3'] + inicio['tempo4'] + inicio['tempo5'] + inicio['tempo6'] + inicio['tempo7'] + inicio['tempo8'] + inicio['tempo9'] + inicio['tempo10']) / 10
 
 
-inicio = inicio[['nome1', 'tempo1','tempo2','tempo3','tempo4','tempo5','tempo6','tempo7','media', 'DURACAO']]
+inicio = inicio[['nome1', 'tempo1','tempo2','tempo3','tempo4','tempo5','tempo6','tempo7', 'tempo8','tempo9','tempo10','media', 'DURACAO']]
 inicio.to_csv('teste.csv')
 
 inicio['diferenca_od'] = inicio['DURACAO'] - inicio['media']
