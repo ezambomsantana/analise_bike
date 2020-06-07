@@ -68,4 +68,31 @@ inicio.to_csv('teste.csv')
 
 inicio['diferenca_od'] = inicio['DURACAO'] - inicio['media']
 inicio['diferenca_od'].hist()
+
+plt.xlabel('Travel Time Difference', fontsize=13)
+plt.ylabel('Number of Travels', fontsize=13)
 plt.show()
+plt.close()
+
+fig, axes = plt.subplots(ncols=2)
+sns.violinplot(ax=axes[0], data=inicio, y="DURACAO")
+axes[0].set_xlabel('Real Travel Time', fontsize=13)
+
+sns.violinplot(ax=axes[1], data=inicio, y="media")
+axes[1].set_xlabel('Simulated Travel Time', fontsize=13)
+plt.show()
+plt.close()
+
+print(len(inicio.index))
+
+menor10 = inicio[inicio['diferenca_od'] <= 10]
+menor10 = menor10[menor10['diferenca_od'] >= -10]
+print(len(menor10.index))
+
+menor10 = inicio[inicio['diferenca_od'] <= 20]
+menor10 = menor10[menor10['diferenca_od'] > 10]
+
+menor11 = inicio[inicio['diferenca_od'] >= -20]
+menor11 = menor11[menor11['diferenca_od'] < -10]
+
+print(len(menor10.index) + len(menor11.index))
